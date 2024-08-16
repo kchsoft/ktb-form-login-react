@@ -8,16 +8,44 @@ function Chat() {
             });
 
             const json = await response.json();
-            alert("로그아웃 성공")
-            // 클라이언트 측에서 리디렉션 처리
-            window.location.href = json.redirectUrl;
+            if(json.successLogout === true){
+                alert("로그아웃 성공")
+                window.location.href = json.redirectUrl;
+            }
+
         } catch (error) {
             console.error("Error during logout:", error);
         }
     }
 
+    const signout = async () => {
+        try{
+            const data = await fetch("http://localhost:8080/signout", {
+                method: "POST",
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            const json = await data.json();
+            console.log(json);
+
+            if(json.signoutSuccess === true){
+                alert(json.message);
+                window.location.href = json.redirectUrl;
+            }
+        } catch(e){
+            console.error("Error during signout:", e)
+        }
+    }
+
     return (
-        <button onClick={logout}>로그아웃</button>
+        <div>
+            <button onClick={logout}>로그아웃</button>
+            <button onClick={signout}>회원탈퇴</button>
+        </div>
     )
 }
 

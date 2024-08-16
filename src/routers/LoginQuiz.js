@@ -52,21 +52,26 @@ function LoginQuiz() {
     const response = await fetch("http://localhost:8080/login/quiz", {
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
       method: 'POST',
-      body: JSON.stringify(formData)
+      body: JSON.stringify(formData),
+      credentials: "include"
     });
 
     if (!response.ok) {
       console.error("서버 응답에 문제가 있습니다:", response.status);
-      setResponseMessage("서버에 문제가 발생했습니다. 다시 시도하세요.");
+      setResponseMessage("서버에 문제가 발생했s습니다. 다시 시도하세요.");
       return;
     }
-    console.log(formData);
+
     try {
       const json = await response.json();  // 응답을 JSON으로 변환
       console.log(json);
       setResponseMessage("응답이 성공적으로 처리되었습니다.");
+      if(json.quizResult === true){
+        window.location.href = json.redirectUrl
+      }
     } catch (e) {
       console.log(e);
       setResponseMessage("응답 처리 중 오류가 발생했습니다.");
